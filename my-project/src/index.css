@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+
+
+
+
+.reveal-card {
+  position: relative;
+  border-radius: 18px;
+  padding: 1px;
+  background: linear-gradient(130deg, #7c3aed, #22d3ee, #ec4899, #7c3aed);
+  background-size: 300% 300%;
+  opacity: 0.35;
+}
+
+.reveal-card.active {
+  animation: gradientFlow 6s ease infinite;
+  opacity: 1;
+}
+
+.reveal-card::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: 16px;
+  background: white;
+  z-index: 1;
+}
+
+.reveal-inner {
+  position: relative;
+  z-index: 2;
+}
+
+/* ICON RING */
+.icon-ring {
+  padding: 2px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(120deg, #7c3aed, #22d3ee, #ec4899);
+  background-size: 200% 200%;
+  animation: gradientFlow 4s linear infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-ring span {
+  width: 46px;
+  height: 46px;
+  background: #f3f4f6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ANIMATION */
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes shine {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.button-bg {
+  background: conic-gradient(
+    from 0deg,
+    #00f5ff,
+    #0f172a,
+    #0f172a,
+    #00f5ff,
+    #0f172a,
+    #0f172a,
+    #0f172a,
+    #00f5ff
+  );
+  background-size: 300% 300%;
+  animation: shine 6s ease-out infinite;
+}
+@keyframes spin-gradient {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+
