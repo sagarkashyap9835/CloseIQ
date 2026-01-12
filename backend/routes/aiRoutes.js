@@ -8,7 +8,7 @@ router.post("/detect", async (req, res) => {
 
   res.json({
     colors: ["Black", "Blue"],
-    outfits: clothes.slice(0, 3),
+    outfits: clothes.slice(0, 1),
   });
 });
 
