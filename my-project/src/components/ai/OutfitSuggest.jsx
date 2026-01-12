@@ -8,7 +8,7 @@ export default function OutfitSuggest({ outfits }) {
     <div>
       <h2>✨ AI Outfit Suggestions</h2>
       {outfits.map((item) => (
-        <p key={item._id}>{item.name}</p>
+        <p key={item._id}>{item.image}</p>
       ))}
     </div>
   );
