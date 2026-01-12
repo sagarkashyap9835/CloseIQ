@@ -17,7 +17,12 @@ const clothSchema = new mongoose.Schema(
     image: {
       type: String,
       required: true
-    }
+    },
+    gender: { 
+    type: String, 
+    enum: ['men', 'women', 'unisex'], 
+    default: 'unisex' 
+  }
   },
   { timestamps: true }    
 );
