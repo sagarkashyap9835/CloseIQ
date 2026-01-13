@@ -8,7 +8,8 @@ const clothSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      required: true
+      required: true,
+      enum: ["Tops", "Bottoms", "Footwear", "Accessories"]
     },
     color: {
       type: String,
@@ -17,14 +18,10 @@ const clothSchema = new mongoose.Schema(
     image: {
       type: String,
       required: true
-    },
-    gender: { 
-    type: String, 
-    enum: ['men', 'women', 'unisex'], 
-    default: 'unisex' 
-  }
+    }
+    // Gender field removed as per user request
   },
-  { timestamps: true }    
+  { timestamps: true }
 );
 
 export default mongoose.model("Cloth", clothSchema);
