@@ -1,96 +1,53 @@
-// import express from "express";
-// import Cloth from "../models/cloth.js";
-
-// const router = express.Router();
-
-// router.post("/detect", async (req, res) => {
-//   const clothes = await Cloth.find();
-
-//   res.json({
-//     colors: ["Black", "Blue"],
-//     outfits: clothes.slice(0, 1),
-//   });
-// });
-
-// export default router;
-
-// import express from "express";
-// import Cloth from "../models/cloth.js";
-
-// const router = express.Router();
-
-// router.post("/detect", async (req, res) => {
-//   try {
-//     const clothes = await Cloth.find();
-    
-//     if (clothes.length === 0) {
-//       return res.json({ colors: [], outfits: [] });
-//     }
-
-//     // Sirf 1 random item suggest karne ke liye
-//     const randomOutfit = [clothes[Math.floor(Math.random() * clothes.length)]];
-
-//     res.json({
-//       colors: ["Black", "Blue"],
-//       outfits: randomOutfit,
-//     });
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// });
-
-// // 🔥 YEH LINE MISSING HAI, ISE ADD KAREIN:
-// export default router;
 
 
+import express from "express";
+import Cloth from "../models/cloth.js";
 
-// // backend/routes/aiRoutes.js ka naya logic
-// router.post("/detect", async (req, res) => {
-//   try {
-//     const { image } = req.body; // Base64 image from camera
-
-//     // Step 1: AI Logic (Abhi simulated hai, Vision API integrate hone tak)
-//     const detectedColor = "Red"; // AI ne detect kiya
-//     const detectedType = "Top";
-
-//     // Step 2: Matching Logic (Color Wheel Rules)
-//     let matchColor = "Black"; 
-//     if(detectedColor === "Black") matchColor = "White";
-
-//     // Step 3: Wardrobe search
-//     const suggestion = await Cloth.findOne({ color: matchColor });
-
-//     res.json({
-//       colors: [detectedColor, matchColor],
-//       outfit: suggestion || await Cloth.findOne() // Agar match na mile toh koi bhi 1 dikhao
-//     });
-//   } catch (err) {
-//     res.status(500).json({ error: err.message });
-//   }
-// });
-
+const router = express.Router();
 
 router.post("/detect", async (req, res) => {
   try {
-    // User ka gender ya toh request body se aayega ya profile se
-    const { userGender } = req.body; 
+    const { image } = req.body; // Base64 image aayegi frontend se
 
-    // Filter: Sirf wahi kapde dikhao jo user ke gender se match karein
-    const clothes = await Cloth.find({ 
-      $or: [{ gender: userGender }, { gender: 'unisex' }] 
-    });
+    // 1. Kyunki abhi API key nahi hai, hum simulate kar rahe hain
+    // Real project mein yahan Vision API labels deta hai
+    const simulatedLabels = ["shirt", "top", "fashion"]; 
 
-    if (clothes.length === 0) {
-      return res.json({ outfit: null, message: "No matching clothes found!" });
+    // 2. Logic: User ne kya pehna hai?
+    const topKeywords = ["shirt", "top", "t-shirt", "sweater", "hoodie"];
+    
+    // Check karein ki kya user ne 'Top' pehna hai
+    let userWearing = "Tops"; 
+    
+    // 3. Opposite Category dhoondo
+    // Agar Top pehna hai to Bottoms dhoondo, varna Tops
+    let targetCategory = (userWearing === "Tops") ? "Bottoms" : "Tops";
+
+    console.log(`User wearing: ${userWearing}, Suggesting from: ${targetCategory}`);
+
+    // 4. Wardrobe (MongoDB) se us category ke items nikalo
+    const suggestionList = await Cloth.find({ category: targetCategory });
+
+    // Agar database mein us category ka kuch nahi hai, toh koi bhi 1 item de do
+    let finalSuggestion = [];
+    if (suggestionList.length > 0) {
+      // Randomly pick one from the list
+      finalSuggestion = [suggestionList[Math.floor(Math.random() * suggestionList.length)]];
+    } else {
+      // Fallback: Agar matching category nahi mili toh pure wardrobe se koi bhi 1
+      const anyItem = await Cloth.findOne();
+      finalSuggestion = anyItem ? [anyItem] : [];
     }
 
-    const randomOutfit = clothes[Math.floor(Math.random() * clothes.length)];
-
     res.json({
-      colors: ["Detected Color"],
-      outfit: randomOutfit
+      colors: ["Detected", userWearing], // Tags dikhane ke liye
+      outfits: finalSuggestion // Frontend expects array
     });
+
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error("Backend Error:", error);
+    res.status(500).json({ error: "Server logic error" });
   }
 });
+
+export default router;
